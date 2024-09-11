@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://sharmayogendra24:Yogendra%401@dev.enbfi.mongodb.net/?retryWrites=true&w=majority&appName=dev
+      database: product-service

@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build')
+    }
+
+    environment {
+        JAVA_HOME = "/opt/homebrew/Cellar/openjdk@17/17.0.7/libexec/openjdk.jdk/Contents/Home"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the specified branch
+                git branch: "${BRANCH_NAME}", url: 'https://github.com/your-repo-url.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build the Spring Boot application using Maven
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                // Package the Spring Boot app into a JAR file
+                sh 'mvn package'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                // Build a Docker image for the Spring Boot application
+                sh 'docker build -t your-docker-repo/spring-boot-app:latest .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                // Push the Docker image to a repository
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                    sh 'docker push your-docker-repo/spring-boot-app:latest'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy to a server or Kubernetes, depending on your environment
+                sh 'kubectl apply -f k8s-deployment.yaml' // Example for Kubernetes deployment
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and deployment successful'
+        }
+        failure {
+            echo 'Build or deployment failed'
+        }
+    }
+}
