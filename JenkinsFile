@@ -6,14 +6,14 @@ pipeline {
     }
 
     environment {
-        JAVA_HOME = "/opt/homebrew/Cellar/openjdk@17/17.0.7/libexec/openjdk.jdk/Contents/Home"
+        JAVA_HOME = "/opt/homebrew/Cellar/openjdk@17/17.0.12/libexec/openjdk.jdk/Contents/Home"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 // Checkout code from the specified branch
-                git branch: "${BRANCH_NAME}", url: 'https://github.com/your-repo-url.git'
+                git branch: "${BRANCH_NAME}", url: 'https://github.com/yogendrasharma96/product-service.git'
             }
         }
 
