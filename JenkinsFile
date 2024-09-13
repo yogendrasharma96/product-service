@@ -13,6 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from the specified branch
+                echo 'Checkout..'
                 git branch: "${BRANCH_NAME}", url: 'https://github.com/yogendrasharma96/product-service.git'
             }
         }
